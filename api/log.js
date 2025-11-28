@@ -11,7 +11,6 @@ export default async function handler(req, res){
     const { habitId, date, value } = body;
     if (!habitId || !date) return bad(res,400,'Missing habitId or date');
     const v = Number(value||0);
-    // upsert
     const { data, error } = await supabase
       .from('logs')
       .upsert({ habit_id: habitId, d: date, value: v }, { onConflict: 'habit_id,d' })

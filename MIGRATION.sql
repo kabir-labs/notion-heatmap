@@ -1,7 +1,4 @@
-
--- Supabase SQL: paste this into SQL editor and RUN.
--- Creates tables for habits, logs, and embed tokens.
-
+-- Supabase SQL for initial setup (v3.1)
 create extension if not exists pgcrypto;
 
 create table if not exists habits (
@@ -11,6 +8,7 @@ create table if not exists habits (
   unit text default '',
   color_hex text default '#35c27a',
   "order" integer default 0,
+  streak_days text[] default array['Mon','Tue','Wed','Thu','Fri','Sat','Sun']::text[],
   created_at timestamptz default now()
 );
 
@@ -31,5 +29,4 @@ create table if not exists embeds (
   created_at timestamptz default now()
 );
 
--- Helpful index for ranges
 create index if not exists idx_logs_habit_day on logs(habit_id, d);

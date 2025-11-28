@@ -19,12 +19,13 @@ export default async function handler(req, res){
 
     if (req.method === 'POST'){
       const body = typeof req.body === 'object' ? req.body : JSON.parse(req.body||'{}');
-      const { name, type, unit, colorHex } = body;
+      const { name, type, unit, colorHex, streakDays } = body;
       if (!name) return bad(res, 400, 'Missing name');
       const t = (type||'number').toLowerCase();
       if (!['number','checkbox'].includes(t)) return bad(res,400,'type must be number or checkbox');
       const { data, error } = await supabase.from('habits').insert({
-        name, type: t, unit: (unit||''), color_hex: colorHex || '#35c27a'
+        name, type: t, unit: (unit||''), color_hex: colorHex || '#35c27a',
+        streak_days: Array.isArray(streakDays) && streakDays.length ? streakDays : null
       }).select().single();
       if (error) throw error;
       return ok(res, { habit: data });
@@ -32,13 +33,14 @@ export default async function handler(req, res){
 
     if (req.method === 'PATCH'){
       const body = typeof req.body === 'object' ? req.body : JSON.parse(req.body||'{}');
-      const { id, name, unit, colorHex, order } = body;
+      const { id, name, unit, colorHex, order, streakDays } = body;
       if (!id) return bad(res, 400, 'Missing id');
       const updates = {};
       if (name !== undefined) updates.name = name;
       if (unit !== undefined) updates.unit = unit;
       if (colorHex !== undefined) updates.color_hex = colorHex;
       if (order !== undefined) updates.order = order;
+      if (streakDays !== undefined) updates.streak_days = streakDays;
       const { data, error } = await supabase.from('habits').update(updates).eq('id', id).select().single();
       if (error) throw error;
       return ok(res, { habit: data });

@@ -9,14 +9,12 @@ export default async function handler(req, res){
     const habitId = req.query.habitId;
     if (!habitId) return bad(res,400,'Missing habitId');
 
-    // timeframe: last365 OR year=YYYY
     const last365 = req.query.last365 === '1' || (!req.query.year);
     let start, end;
     if (last365){
       const today = new Date(); today.setHours(0,0,0,0);
       const s = new Date(today); s.setDate(s.getDate()-364);
-      start = s.toISOString().slice(0,10);
-      end = today.toISOString().slice(0,10);
+      start = toYMD(s); end = toYMD(today);
     } else {
       const y = Number(req.query.year || new Date().getFullYear());
       start = `${y}-01-01`; end = `${y}-12-31`;
@@ -32,33 +30,46 @@ export default async function handler(req, res){
       .order('d',{ascending:true});
     if (error) throw error;
 
-    // build map
-    const map = new Map();
-    for (const r of rows) map.set(r.d, Number(r.value));
-
-    function ymd(d){ const z=n=>n<10?'0'+n:n; return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
+    const map = new Map(rows.map(r => [r.d, Number(r.value)]));
     const sDate = new Date(start+'T00:00:00');
     const eDate = new Date(end+'T00:00:00');
 
     const days = [];
     for (let d=new Date(sDate); d<=eDate; d.setDate(d.getDate()+1)){
-      const key = ymd(d);
+      const key = toYMD(d);
       days.push({ date:key, value: map.get(key) || 0 });
     }
 
-    // stats
+    const allowed = (habit.streak_days || ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']);
+    const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let i = days.length - 1;
+    const todayAllowed = allowed.includes(dow[new Date(days[i].date+'T00:00:00').getDay()]);
+    if (!todayAllowed || days[i].value === 0) i--;
+    let streak = 0;
+    for (; i>=0; i--){
+      const dt = new Date(days[i].date+'T00:00:00');
+      const allowedDay = allowed.includes(dow[dt.getDay()]);
+      if (!allowedDay) continue;
+      if (days[i].value > 0) streak++;
+      else break;
+    }
+
     const vals = days.map(x=>Number(x.value)||0);
     const active = vals.filter(v=>v>0);
     const total = vals.reduce((a,b)=>a+b,0);
     const average = active.length ? (total/active.length) : 0;
-    let streak=0; for (let i=vals.length-1;i>=0;i--){ if (vals[i]>0) streak++; else break; }
 
     return ok(res, {
       range: { start, end, last365 },
-      habit: { id: habit.id, name: habit.name, type: habit.type, unit: habit.unit, colorHex: habit.color_hex },
+      habit: {
+        id: habit.id, name: habit.name, type: habit.type,
+        unit: habit.unit, colorHex: habit.color_hex, streakDays: habit.streak_days
+      },
       days, stats: { streak, average, total }
     });
   } catch(e){
     console.error(e); return bad(res,500,e.message||'Unexpected');
   }
 }
+
+function toYMD(d){ const z=n=>n<10?'0'+n:n; return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
