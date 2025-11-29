@@ -22,12 +22,9 @@ export default async function handler(req, res){
 
     const { data: habit, error: herr } = await supabase.from('habits').select('*').eq('id', habitId).single();
     if (herr) throw herr;
-    const { data: rows, error } = await supabase
-      .from('logs')
-      .select('d, value')
-      .eq('habit_id', habitId)
-      .gte('d', start).lte('d', end)
-      .order('d',{ascending:true});
+    const { data: rows, error } = await supabase.from('logs')
+      .select('d,value').eq('habit_id', habitId)
+      .gte('d', start).lte('d', end).order('d',{ascending:true});
     if (error) throw error;
 
     const map = new Map(rows.map(r => [r.d, Number(r.value)]));
@@ -64,10 +61,8 @@ export default async function handler(req, res){
 
     return ok(res, {
       range: { start, end, last365 },
-      habit: {
-        id: habit.id, name: habit.name, type: habit.type,
-        unit: habit.unit, colorHex: habit.color_hex, streakDays: habit.streak_days
-      },
+      habit: { id: habit.id, name: habit.name, type: habit.type, unit: habit.unit,
+               colorHex: habit.color_hex, streakDays: habit.streak_days },
       days, stats: { streak, average, total, continuesToday }
     });
   } catch(e){

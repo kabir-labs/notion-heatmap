@@ -8,11 +8,8 @@ export default async function handler(req, res){
     const supabase = getClient();
 
     if (req.method === 'GET'){
-      const { data, error } = await supabase
-        .from('habits')
-        .select('*')
-        .order('order',{ascending:true})
-        .order('created_at',{ascending:true});
+      const { data, error } = await supabase.from('habits')
+        .select('*').order('order',{ascending:true}).order('created_at',{ascending:true});
       if (error) throw error;
       return ok(res, { habits: data });
     }
@@ -24,8 +21,8 @@ export default async function handler(req, res){
       const t = (type||'number').toLowerCase();
       if (!['number','checkbox'].includes(t)) return bad(res,400,'type must be number or checkbox');
       const { data, error } = await supabase.from('habits').insert({
-        name, type: t, unit: (unit||''), color_hex: colorHex || '#35c27a',
-        streak_days: Array.isArray(streakDays) && streakDays.length ? streakDays : null
+        name, type:t, unit: (unit||''), color_hex: colorHex || '#35c27a',
+        streak_days: Array.isArray(streakDays)&&streakDays.length? streakDays : null
       }).select().single();
       if (error) throw error;
       return ok(res, { habit: data });
@@ -52,12 +49,12 @@ export default async function handler(req, res){
       if (!id) return bad(res, 400, 'Missing id');
       const { error } = await supabase.from('habits').delete().eq('id', id);
       if (error) throw error;
-      return ok(res, { ok: true });
+      return ok(res, { ok:true });
     }
 
     return bad(res, 405, 'Method not allowed');
-  } catch (e){
+  } catch (e) {
     console.error(e);
-    return bad(res, 500, e.message || 'Unexpected');
+    return bad(res, 500, e.message||'Unexpected');
   }
 }
