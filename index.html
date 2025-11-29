@@ -3,48 +3,45 @@
 <head>
 <meta charset='utf-8'/>
 <meta name='viewport' content='width=device-width, initial-scale=1'/>
-<title>Heatmap Habits — v3.4.0</title>
+<title>Heatmap Habits v3.4.0</title>
 <style>
-/* ======= THEME (v3.4.0 builds on 3.3.0) ======= */
+/* ======= THEME (inherits v3.3.0) ======= */
 :root{
   --bg:#f7f8fb; --card:#ffffff; --ink:#0d1421; --muted:#5d6b83; --line:#e6e9f0;
   --chip:#f1f4f9; --cell:#e9edf4; --cell-edge:#d7dfea66; --ok:#23b26b; --danger:#e25555; --grey:#8a94a6;
 }
 .dark,:root.dark{
-  /* New dark palette per request */
-  --bg:#191919; --card:#191919; --ink:#ECECEC; --muted:#A9A9A9; --line:#2a2a2a;
-  --chip:#222222; --cell:#D4D4D4; --cell-edge:#bfbfbf; --ok:#41d78f; --danger:#ff6a6a; --grey:#c8ced9;
+  --bg:#0c1016; --card:#0f141c; --ink:#e6edf3; --muted:#a0aec0; --line:#1c2430;
+  --chip:#0d131b; --cell:#26303b; --cell-edge:#354152; --ok:#41d78f; --danger:#ff6a6a; --grey:#c8ced9;
 }
-/* Notion embed uses same dark variables + keep a subtle card border */
-body.embed{ --bg:#191919; --card:#191919; --ink:#ECECEC; --muted:#A9A9A9; --line:#2a2a2a; --chip:#222222; --cell:#D4D4D4; --cell-edge:#bfbfbf; }
+body.embed{ --bg:#0c1016; --card:#0f141c; --ink:#e6edf3; --muted:#a0aec0; --line:#1c2430; --chip:#0d131b; --cell:#26303b; --cell-edge:#354152; }
 
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.35 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 *,*:before,*:after{box-sizing:border-box}
 
-/* ======= LAYOUT & SPACING ======= */
+/* ======= LAYOUT (v3.4.0: more breathing room) ======= */
 .wrap{max-width:1120px;margin:0 auto;padding:28px 28px 36px}
 .top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .search{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--ink);min-width:140px}
 
 .grid{display:flex;flex-direction:column;gap:32px}
 .box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 26px 22px;overflow:hidden}
-body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
 
-.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px} /* more gap title → heatmap */
 .title{font-weight:800;letter-spacing:.2px;font-size:22px}
 
-/* Icon buttons (shared with other dropdowns) */
+/* Icon buttons */
 .icons{display:flex;gap:8px}
 .iconbtn{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;display:grid;place-items:center;color:var(--muted);transition:background .15s,color .15s,border-color .15s,transform .02s}
-.iconbtn:hover{background:rgba(255,255,255,.04);border-color:#3a3a3a;color:#e5e5e5}
+.iconbtn:hover{background:rgba(255,255,255,.03);border-color:#334155;color:#e5e5e5}
 .iconbtn:active{transform:translateY(1px)}
 .iconbtn svg{width:18px;height:18px}
 
-/* Months header and heatmap — extra spacing below title and above stats */
-.months{position:relative;height:18px;margin:6px 2px 6px 54px;overflow:hidden}
+/* Months header and heatmap */
+.months{position:relative;height:18px;margin:2px 2px 6px 54px;overflow:hidden}
 .monthsInner{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;color:var(--muted);font-size:12px;align-items:end;will-change:transform}
 .monthsInner .m{grid-row:1}
-.row{display:flex;align-items:flex-start;overflow:auto;padding-right:6px;margin-bottom:8px}
+.row{display:flex;align-items:flex-start;overflow:auto;padding-right:6px;margin-bottom:10px} /* extra gap heatmap → stats */
 .rowlbls{color:var(--muted);font-size:12px;width:46px;margin-right:6px;display:grid;grid-template-rows:repeat(7,16px);gap:6px;flex:0 0 auto}
 .heat{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;grid-template-rows:repeat(7,16px);padding:4px 2px;flex:1 1 auto;min-height:140px;max-width:100%}
 
@@ -52,9 +49,9 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
 .cell{width:16px;height:16px;border-radius:3px;background:var(--cell);outline:1px solid var(--cell-edge);cursor:pointer;transition:opacity .05s}
 .cell:hover{opacity:.9}
 
-/* footer: stats + cta aligned on bottom (Log today aligns with “Total:”) */
-.footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:8px}
-.stats{display:flex;flex-direction:column;gap:8px}
+/* footer block holds stats (stacked) + cta button aligned on Total baseline */
+.footer{display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.stats{display:flex;flex-direction:column;gap:8px;margin-top:0}
 .stats .k{color:var(--muted)}
 .stats .v{color:var(--ink);font-weight:800}
 
@@ -70,9 +67,9 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
 .rowx{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .field{width:100%;background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;max-width:100%}
 .tiny{color:var(--muted);font-size:12px}
-.kbd{background:#262626;color:#e8eef6;border:1px solid #3a3a3a;border-radius:6px;padding:2px 6px;font-size:12px}
+.kbd{background:#252b35;color:#e8eef6;border:1px solid #3a4656;border-radius:6px;padding:2px 6px;font-size:12px}
 
-/* Shared dropdown used for calendar, 3-dots, and create-habit */
+/* Dropdowns (calendar, 3-dots, create-habit) */
 .dd.floating, .menu .dd{
   position:absolute;background:var(--card);border:1px solid var(--line);border-radius:12px;min-width:240px;z-index:60;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.25);display:none;
 }
@@ -219,17 +216,15 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
     const heat=div('heat'); heatWrap.appendChild(heat);
     card.appendChild(heatWrap);
 
-    /* footer block holds stats and CTA to align bottoms */
+    /* footer: stats + cta aligned */
     const footer=div('footer');
     const stats=div('stats');
     stats.innerHTML=`
       <div><span class='k'>Streak:</span> <span class='v' id='s${h.id}'>0 days</span></div>
       <div><span class='k'>Average:</span> <span class='v' id='a${h.id}'>0</span> <span class='v'>${h.unit||''}</span></div>
       <div><span class='k'>Total:</span> <span class='v' id='t${h.id}'>0</span> <span class='v'>${h.unit||''}</span></div>`;
-    footer.appendChild(stats);
-
-    const cta=div('cta'); const btn=button('Log today →'); cta.appendChild(btn); footer.appendChild(cta);
-    card.appendChild(footer);
+    const cta=div('cta'); const btn=button('Log today →'); cta.appendChild(btn);
+    footer.append(stats, cta); card.appendChild(footer);
 
     cal.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(cal,card,()=>calendarDD(mode,(m)=>{ mode=m; refresh(); })) });
     dots.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(dots,card,()=>dotsDD(h)); });
@@ -245,7 +240,7 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
 
     async function refresh(){
       const data=await API.heatmap(h.id,mode==='last365'?'last365':mode);
-      const days= data.days||[];
+      const days=data.days||[];
       const aligned=alignToMonday(days);
       const weeks=chunkWeeks(aligned);
 
@@ -368,7 +363,7 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
     show('edit',true);
     id('ehSave').onclick=async()=>{
       const streakDays=[...box.querySelectorAll('input[type=checkbox]')].filter(x=>x.checked).map(x=>x.value);
-      await API.update({id:h.id,name=id('ehName').value,unit=id('ehType').value==='number'?id('ehUnit').value:'',colorHex=id('ehColor').value,streakDays});
+      await API.update({id:h.id,name:id('ehName').value,unit:id('ehType').value==='number'?id('ehUnit').value:'',colorHex:id('ehColor').value,streakDays});
       show('edit',false); await load();
     };
   }
@@ -383,7 +378,7 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
     wrap.style.display=isCheckbox?'none':'block';
     if(!isCheckbox){ input.placeholder=habit.unit||'units'; input.value=currentValue>0?currentValue:''; }
 
-    /* No “(today)” text anywhere; keep clean copy */
+    // keep no "(today)" wording
     id('lpStreak').querySelector('span').textContent=`${streak||0} days streak`;
 
     const $undo=id('undo'); $undo.style.display=(currentValue>0)?'inline-block':'none';
@@ -416,6 +411,7 @@ body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
   function cl(x){ return Math.max(0,Math.min(1,x)); }
   function hexToHsl(hex){ const [r,g,b]=hexToRgb(hex).map(x=>x/255); const max=Math.max(r,g,b),min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){ h=s=0 } else { const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break} h/=6 } return [h,s,l]; }
   function hexToRgb(hex){ const h=hex.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  function hslToRgb(h,s,l){ let r, g, b; if(s==0){ r = g = b = l; } else { const hue2rgb = function hue2rgb(p, q, t){ if(t < 0) t += 1; if(t > 1) t -= 1; if(t < 1/6) return p + (q - p) * 6 * t; if(t < 1/2) return q; if(t < 2/3) return p + (q - p) * (2/3 - t) * 6; return p; }; const q = l < 0.5 ? l * (1 + s) : l + s - l * s; const p = 2 * l - q; r = hue2rgb(p, q, h + 1/3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1/3); } return [r, g, b]; }
   function hslToHex(h,s,l){ const rgb=hslToRgb(h,s,l).map(x=>Math.round(x*255)); return '#'+rgb.map(x=>x.toString(16).padStart(2, '0')).join(''); }
 
   function menu(root){
