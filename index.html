@@ -3,71 +3,92 @@
 <head>
 <meta charset='utf-8'/>
 <meta name='viewport' content='width=device-width, initial-scale=1'/>
-<title>Heatmap Habits</title>
+<title>Heatmap Habits — v3.4.0</title>
 <style>
-:root{ --bg:#f7f8fb; --card:#fff; --ink:#0d1421; --muted:#5d6b83; --line:#e6e9f0;
-       --chip:#f1f4f9; --cell:#e9edf4; --cell-edge:#d7dfea44; --ok:#23b26b; --danger:#e25555; --grey:#8a94a6; }
-.dark,:root.dark{ --bg:#0b0e14; --card:#141a23; --ink:#e7edf6; --muted:#c6d0df; --line:#1f2633;
-       --chip:#0f1622; --cell:#2a3344; --cell-edge:#101521; --ok:#41d78f; --danger:#ff6a6a; --grey:#a9b3c2; }
-body.embed{
-  --bg:#191b22; --card:#191b22; --ink:#eef2f6; --muted:#aeb8c8; --line:#272c35;
-  --chip:#22262f; --cell:#2b313c; --cell-edge:#1e232b; --ok:#41d78f; --danger:#ff6a6a; --grey:#c8ced9;
+/* ======= THEME (v3.4.0 builds on 3.3.0) ======= */
+:root{
+  --bg:#f7f8fb; --card:#ffffff; --ink:#0d1421; --muted:#5d6b83; --line:#e6e9f0;
+  --chip:#f1f4f9; --cell:#e9edf4; --cell-edge:#d7dfea66; --ok:#23b26b; --danger:#e25555; --grey:#8a94a6;
 }
+.dark,:root.dark{
+  /* New dark palette per request */
+  --bg:#191919; --card:#191919; --ink:#ECECEC; --muted:#A9A9A9; --line:#2a2a2a;
+  --chip:#222222; --cell:#D4D4D4; --cell-edge:#bfbfbf; --ok:#41d78f; --danger:#ff6a6a; --grey:#c8ced9;
+}
+/* Notion embed uses same dark variables + keep a subtle card border */
+body.embed{ --bg:#191919; --card:#191919; --ink:#ECECEC; --muted:#A9A9A9; --line:#2a2a2a; --chip:#222222; --cell:#D4D4D4; --cell-edge:#bfbfbf; }
+
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.35 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 *,*:before,*:after{box-sizing:border-box}
-.wrap{max-width:1100px;margin:0 auto;padding:18px;overflow:hidden}
-body.embed .wrap{padding:0}
-.top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+
+/* ======= LAYOUT & SPACING ======= */
+.wrap{max-width:1120px;margin:0 auto;padding:28px 28px 36px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .search{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--ink);min-width:140px}
-.btn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);transition:background .15s,border-color .15s,opacity .05s}
-.btn:hover{background:rgba(255,255,255,.03);border-color:#cbd4e1}
-.dark .btn:hover{border-color:#2a3344}
-.btn.success{background:var(--ok);border-color:var(--ok);color:#0b0f14}
-.btn.danger{background:var(--danger);border-color:var(--danger);color:#0b0f14}
-.grid{display:flex;flex-direction:column;gap:18px}
-.box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;overflow:hidden}
-body.embed .box{border:none;border-radius:0;}
-.hdr{display:flex;align-items:center;justify-content:space-between}
-.title{font-weight:800;letter-spacing:.2px;font-size:26px}
+
+.grid{display:flex;flex-direction:column;gap:32px}
+.box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 26px 22px;overflow:hidden}
+body.embed .box{ border:1px solid var(--line); } /* explicit in embed */
+
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.title{font-weight:800;letter-spacing:.2px;font-size:22px}
+
+/* Icon buttons (shared with other dropdowns) */
 .icons{display:flex;gap:8px}
-.iconbtn{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;display:grid;place-items:center;color:var(--grey);transition:background .15s,color .15s,border-color .15s,transform .02s}
-.iconbtn:hover{background:rgba(255,255,255,.03);border-color:#cbd4e1;color:#d3d9e6}
-.dark .iconbtn:hover{border-color:#2a3344}
+.iconbtn{background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;display:grid;place-items:center;color:var(--muted);transition:background .15s,color .15s,border-color .15s,transform .02s}
+.iconbtn:hover{background:rgba(255,255,255,.04);border-color:#3a3a3a;color:#e5e5e5}
 .iconbtn:active{transform:translateY(1px)}
 .iconbtn svg{width:18px;height:18px}
-.months{position:relative;height:18px;margin:6px 2px 2px 42px;overflow:hidden}
+
+/* Months header and heatmap — extra spacing below title and above stats */
+.months{position:relative;height:18px;margin:6px 2px 6px 54px;overflow:hidden}
 .monthsInner{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;color:var(--muted);font-size:12px;align-items:end;will-change:transform}
 .monthsInner .m{grid-row:1}
-.row{display:flex;align-items:flex-start;overflow:auto}
-.rowlbls{color:var(--muted);font-size:12px;width:34px;margin-right:6px;display:grid;grid-template-rows:repeat(7,16px);gap:6px;flex:0 0 auto}
+.row{display:flex;align-items:flex-start;overflow:auto;padding-right:6px;margin-bottom:8px}
+.rowlbls{color:var(--muted);font-size:12px;width:46px;margin-right:6px;display:grid;grid-template-rows:repeat(7,16px);gap:6px;flex:0 0 auto}
 .heat{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;grid-template-rows:repeat(7,16px);padding:4px 2px;flex:1 1 auto;min-height:140px;max-width:100%}
+
+/* heat squares */
 .cell{width:16px;height:16px;border-radius:3px;background:var(--cell);outline:1px solid var(--cell-edge);cursor:pointer;transition:opacity .05s}
 .cell:hover{opacity:.9}
-.stats{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+
+/* footer: stats + cta aligned on bottom (Log today aligns with “Total:”) */
+.footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:8px}
+.stats{display:flex;flex-direction:column;gap:8px}
 .stats .k{color:var(--muted)}
 .stats .v{color:var(--ink);font-weight:800}
-.cta{margin-top:12px;display:flex;justify-content:flex-end}
+
+/* CTA */
 .cta .btn{font-weight:800}
 .todayDone{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:800}
 .check{width:18px;height:18px;border-radius:50%;background:var(--ok);display:inline-grid;place-items:center;color:#0b0f14;font-weight:900}
 .check:after{content:'✓';font-size:12px;line-height:1}
+
+/* Modals / dropdowns */
 .modal,.pop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:50}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:360px;max-width:min(520px,92vw);color:var(--ink);overflow:hidden}
 .rowx{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .field{width:100%;background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;max-width:100%}
 .tiny{color:var(--muted);font-size:12px}
-.kbd{background:#232a38;color:#e8eef6;border:1px solid #3a4356;border-radius:6px;padding:2px 6px;font-size:12px}
-.dark .kbd{background:#1b2230}
-.dd.floating{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:12px;min-width:240px;z-index:60;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.25)}
-.dd.floating .item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--ink);transition:background .1s}
-.dd.floating .item:last-child{border-bottom:none}
-.dd.floating .item:hover{background:rgba(255,255,255,.03)}
+.kbd{background:#262626;color:#e8eef6;border:1px solid #3a3a3a;border-radius:6px;padding:2px 6px;font-size:12px}
+
+/* Shared dropdown used for calendar, 3-dots, and create-habit */
+.dd.floating, .menu .dd{
+  position:absolute;background:var(--card);border:1px solid var(--line);border-radius:12px;min-width:240px;z-index:60;overflow:hidden;box-shadow:0 6px 28px rgba(0,0,0,.25);display:none;
+}
+.menu{position:relative}
+.menu .dd{top:110%; right:0;}
+.dd.floating .item, .menu .dd .item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--ink);transition:background .12s}
+.dd.floating .item:last-child, .menu .dd .item:last-child{border-bottom:none}
+.dd.floating .item:hover, .menu .dd .item:hover{background:rgba(255,255,255,.04)}
 .dd.floating .item.delete{color:var(--danger)}
 .dd.floating svg{width:16px;height:16px}
+
+/* Tooltip */
 .tooltip{position:fixed;pointer-events:none;background:var(--card);border:1px solid var(--line);padding:6px 9px;border-radius:8px;font-size:12px;color:var(--ink);display:none;z-index:100;white-space:pre}
 </style>
 </head>
-<body>
+<body class="dark">
 <div id='root' class='wrap'>
   <div class='top'>
     <input id='q' class='search' placeholder='Search habits'/>
@@ -75,7 +96,7 @@ body.embed .box{border:none;border-radius:0;}
     <div class='menu' id='createMenu'>
       <button class='btn'>Create habit ▾</button>
       <div class='dd'>
-        <div class='item' data-type='number'># Number</div>
+        <div class='item' data-type='number'><strong># Number</strong></div>
         <div class='item' data-type='checkbox'>Checkbox</div>
       </div>
     </div>
@@ -83,6 +104,8 @@ body.embed .box{border:none;border-radius:0;}
   <div id='list' class='grid'></div>
 </div>
 <div id='tip' class='tooltip'></div>
+
+<!-- Log popup -->
 <div id='logPop' class='pop'>
   <div class='panel'>
     <div class='rowx' style='justify-content:space-between'><div class='rowx'><div id='dot' style='width:10px;height:10px;border-radius:50%;background:#f2c14e'></div><strong id='lpHabit' style='margin-left:6px'></strong></div><button class='btn kbd' id='esc1'>esc</button></div>
@@ -95,6 +118,8 @@ body.embed .box{border:none;border-radius:0;}
     </div>
   </div>
 </div>
+
+<!-- Edit habit -->
 <div id='edit' class='modal'>
   <div class='panel'>
     <div class='rowx' style='justify-content:space-between'><strong>Edit habit</strong><button class='btn kbd' id='esc2'>esc</button></div>
@@ -108,6 +133,8 @@ body.embed .box{border:none;border-radius:0;}
     </div>
   </div>
 </div>
+
+<!-- Embed modal -->
 <div id='embed' class='modal'>
   <div class='panel'>
     <div class='rowx' style='justify-content:space-between'><strong>Embed Habit</strong><button class='btn kbd' id='esc3'>esc</button></div>
@@ -119,6 +146,7 @@ body.embed .box{border:none;border-radius:0;}
     </div>
   </div>
 </div>
+
 <script>
 (function(){
   const qs=new URLSearchParams(location.search);
@@ -142,7 +170,7 @@ body.embed .box{border:none;border-radius:0;}
 
   const Pop={el:null, open(anchor,container,builder){ this.close(); this.el=builder(); container.appendChild(this.el); position(this.el,anchor,container); setTimeout(()=>{const onDown=(e)=>{if(!this.el.contains(e.target)&&e.target!==anchor) this.close()}; document.addEventListener('pointerdown',onDown,{once:true})})}, close(){ if(this.el){ this.el.remove(); this.el=null; } }};
 
-  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ Pop.close(); ['logPop','edit','embed'].forEach(s=>show(s,false)); } });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ Pop.close(); ['logPop','edit','embed'].forEach(s=>show(s,false)); const dd=document.querySelector('#createMenu .dd'); if(dd) dd.style.display='none'; } });
   id('esc1').onclick=()=>show('logPop',false);
   id('esc2').onclick=()=>show('edit',false);
   id('esc3').onclick=()=>show('embed',false);
@@ -191,14 +219,17 @@ body.embed .box{border:none;border-radius:0;}
     const heat=div('heat'); heatWrap.appendChild(heat);
     card.appendChild(heatWrap);
 
+    /* footer block holds stats and CTA to align bottoms */
+    const footer=div('footer');
     const stats=div('stats');
     stats.innerHTML=`
       <div><span class='k'>Streak:</span> <span class='v' id='s${h.id}'>0 days</span></div>
-      <div><span class='k'>Average:</span> <span class='v' id='a${h.id}'>0</span> ${h.unit||''}</div>
-      <div><span class='k'>Total:</span> <span class='v' id='t${h.id}'>0</span> ${h.unit||''}</div>`;
-    card.appendChild(stats);
+      <div><span class='k'>Average:</span> <span class='v' id='a${h.id}'>0</span> <span class='v'>${h.unit||''}</span></div>
+      <div><span class='k'>Total:</span> <span class='v' id='t${h.id}'>0</span> <span class='v'>${h.unit||''}</span></div>`;
+    footer.appendChild(stats);
 
-    const cta=div('cta'); const btn=button('Log today →'); cta.appendChild(btn); card.appendChild(cta);
+    const cta=div('cta'); const btn=button('Log today →'); cta.appendChild(btn); footer.appendChild(cta);
+    card.appendChild(footer);
 
     cal.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(cal,card,()=>calendarDD(mode,(m)=>{ mode=m; refresh(); })) });
     dots.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(dots,card,()=>dotsDD(h)); });
@@ -214,7 +245,7 @@ body.embed .box{border:none;border-radius:0;}
 
     async function refresh(){
       const data=await API.heatmap(h.id,mode==='last365'?'last365':mode);
-      const days=data.days||[];
+      const days= data.days||[];
       const aligned=alignToMonday(days);
       const weeks=chunkWeeks(aligned);
 
@@ -240,7 +271,7 @@ body.embed .box{border:none;border-radius:0;}
             c.dataset.date=d.date; c.dataset.value=v;
             c.onmouseenter=(evt)=>showTip(evt,d.date,v,h.unit||'');
             c.onmouseleave=()=>$tip.style.display='none';
-            c.onclick=()=>openLog(h,new Date(d.date+'T00:00:00'),v,btn,data.stats.streak,data.stats.continuesToday);
+            c.onclick=()=>openLog(h,new Date(d.date+'T00:00:00'),v,btn,data.stats.streak);
           } else {
             c.style.opacity=.25;
           }
@@ -248,7 +279,7 @@ body.embed .box{border:none;border-radius:0;}
         }
       }
 
-      const streakText=(data.stats.streak||0)+' days'+(data.stats.continuesToday?' (today)':'');
+      const streakText=(data.stats.streak||0)+' days';
       id(`s${h.id}`).textContent=streakText;
       id(`a${h.id}`).textContent=fmt(data.stats.average||0);
       id(`t${h.id}`).textContent=fmt(data.stats.total||0);
@@ -257,11 +288,11 @@ body.embed .box{border:none;border-radius:0;}
       const tRow = days.find(x=>x.date===todayKey);
       const tv=Number(tRow?.value||0);
       if(tv>0){
-        btn.innerHTML=`Today: <strong>${tv} ${h.unit||''}</strong> <span class='check'></span>`;
+        btn.innerHTML=`<strong>Today:</strong> <strong>${tv} ${h.unit||''}</strong> <span class='check'></span>`;
       } else {
         btn.innerHTML='<strong>Log today</strong> →';
       }
-      btn.onclick=()=>openLog(h,todayLocal(),tv,btn,data.stats.streak,data.stats.continuesToday);
+      btn.onclick=()=>openLog(h,todayLocal(),tv,btn,data.stats.streak);
     }
 
     return host;
@@ -316,7 +347,7 @@ body.embed .box{border:none;border-radius:0;}
         const r=await API.embedLink(h.id,{dark:id('emDark').checked,canWrite:id('emWrite').checked});
         await navigator.clipboard.writeText(r.url);
         label.textContent='Copied!';
-        setTimeout(()=>label.textContent='Copy unique link',2000);
+        setTimeout(()=>label.textContent='Copy unique link',1800);
       }catch(e){ console.error(e); }
     };
   }
@@ -337,12 +368,12 @@ body.embed .box{border:none;border-radius:0;}
     show('edit',true);
     id('ehSave').onclick=async()=>{
       const streakDays=[...box.querySelectorAll('input[type=checkbox]')].filter(x=>x.checked).map(x=>x.value);
-      await API.update({id:h.id,name:id('ehName').value,unit:id('ehType').value==='number'?id('ehUnit').value:'',colorHex:id('ehColor').value,streakDays});
+      await API.update({id:h.id,name=id('ehName').value,unit=id('ehType').value==='number'?id('ehUnit').value:'',colorHex=id('ehColor').value,streakDays});
       show('edit',false); await load();
     };
   }
 
-  function openLog(habit,dateObj,currentValue,btn,streak,continuesToday){
+  function openLog(habit,dateObj,currentValue,btn,streak){
     id('lpHabit').textContent=habit.name;
     id('dot').style.background=habit.color_hex||'#f2c14e';
     id('lpDate').textContent=dateObj.toLocaleDateString(undefined,{weekday:'short',year:'numeric',month:'short',day:'numeric'});
@@ -352,7 +383,8 @@ body.embed .box{border:none;border-radius:0;}
     wrap.style.display=isCheckbox?'none':'block';
     if(!isCheckbox){ input.placeholder=habit.unit||'units'; input.value=currentValue>0?currentValue:''; }
 
-    id('lpStreak').querySelector('span').textContent=`${streak||0} days streak${continuesToday?' (today)':''}`;
+    /* No “(today)” text anywhere; keep clean copy */
+    id('lpStreak').querySelector('span').textContent=`${streak||0} days streak`;
 
     const $undo=id('undo'); $undo.style.display=(currentValue>0)?'inline-block':'none';
     show('logPop',true);
@@ -368,12 +400,14 @@ body.embed .box{border:none;border-radius:0;}
     };
   }
 
+  /* color utilities */
   function buildPalette(hex){ const [h,s,l]=hexToHsl(hex||'#35c27a'); return {1:hslToHex(h,Math.min(1,s),cl(l*0.58)),2:hslToHex(h,Math.min(1,s),cl(l*0.68)),3:hslToHex(h,Math.min(1,s),cl(l*0.80)),4:hslToHex(h,Math.min(1,s),cl(l*0.92))}; }
   function level(days,v){ if(v<=0) return 0; const vals=days.map(d=>(d?Number(d.value)||0:0)).filter(x=>x>0).sort((a,b)=>a-b); if(vals.length<5) return 1; const q=p=>vals[Math.floor((vals.length-1)*p)]; const S=[0,q(.2),q(.4),q(.6),q(.8)]; if(v>S[4])return 4; if(v>S[3])return 3; if(v>S[2])return 2; return 1; }
   function alignToMonday(days){ const out=days.slice(); if(!out.length) return out; const first=new Date(out[0].date+'T00:00:00'); const dow=first.getDay(); const need=(dow===1)?0:((dow===0)?6:(dow-1)); return Array(need).fill(null).concat(out); }
   function chunkWeeks(days){ const weeks=[]; let buf=[]; for(let i=0;i<days.length;i++){ buf.push(days[i]); if(buf.length===7){ weeks.push(buf); buf=[]; } } if(buf.length){ while(buf.length<7) buf.push(null); weeks.push(buf); } return weeks; }
   function monthStarts(days){ const map=new Map(); const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; for(let i=0;i<days.length;i++){ const d=days[i]; if(!d) continue; const dt=new Date(d.date+'T00:00:00'); if(dt.getDate()===1){ const weekIdx=Math.floor(i/7); map.set(weekIdx,months[dt.getMonth()]); } } return map; }
 
+  /* helpers */
   function showTip(evt,date,value,unit){ const s=`${value||0} ${unit||''}`.trim(); const t=id('tip'); t.textContent=`${s||'0'}\n${new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'})}`; t.style.display='block'; t.style.left=evt.clientX+12+'px'; t.style.top=evt.clientY-12+'px'; }
   function todayLocal(){ const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); }
   function ymd(d){ const z=n=>n<10?'0'+n:n; return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
@@ -382,13 +416,13 @@ body.embed .box{border:none;border-radius:0;}
   function cl(x){ return Math.max(0,Math.min(1,x)); }
   function hexToHsl(hex){ const [r,g,b]=hexToRgb(hex).map(x=>x/255); const max=Math.max(r,g,b),min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){ h=s=0 } else { const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break} h/=6 } return [h,s,l]; }
   function hexToRgb(hex){ const h=hex.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
-  function hslToHex(h,s,l){ const rgb=hslToRgb(h,s,l).map(x=>Math.round(x*255)); return '#'+rgb.map(x=>x.toString(16).padStart(2,'0')).join(''); }
-  function hslToRgb(h,s,l){ let r,g,b; if(s===0){ r=g=b=l } else { const hue2rgb=(p,q,t)=>{ if(t<0)t+=1; if(t>1)t-=1; if(t<1/6)return p+(q-p)*6*t; if(t<1/2)return q; if(t<2/3)return p+(q-p)*(2/3-t)*6; return p; }; const q=l<0.5?l*(1+s):l+s-l*s; const p=2*l-q; r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3); } return [r,g,b]; }
+  function hslToHex(h,s,l){ const rgb=hslToRgb(h,s,l).map(x=>Math.round(x*255)); return '#'+rgb.map(x=>x.toString(16).padStart(2, '0')).join(''); }
 
   function menu(root){
     const btn=root.querySelector('button');
     const dd=root.querySelector('.dd');
-    btn.onclick=()=>{ dd.style.display=dd.style.display==='block'?'none':'block'; };
+    btn.onclick=(e)=>{ e.stopPropagation(); dd.style.display = dd.style.display==='block' ? 'none' : 'block'; };
+    document.addEventListener('pointerdown', (e)=>{ if(!root.contains(e.target)) dd.style.display='none'; });
     dd.querySelectorAll('.item').forEach(it=>it.onclick=async()=>{
       dd.style.display='none';
       const type=it.dataset.type;
