@@ -5,7 +5,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'/>
 <title>Heatmap Habits</title>
 <style>
-:root{ --bg:#f7f8fb; --card:#fff; --ink:#0d1421; --muted:#5d6b83; --line:#e6e9f0;
+:root{ --bg:#ffffff; --card:#fff; --ink:#0d1421; --muted:#5d6b83; --line:#e6e9f0;
        --chip:#f1f4f9; --cell:#e9edf4; --cell-edge:#d7dfea44; --ok:#23b26b; --danger:#e25555; --grey:#8a94a6; --hover-border:#cbd4e1; }
 .dark,:root.dark{ --bg:#0b0e14; --card:#141a23; --ink:#e7edf6; --muted:#c6d0df; --line:#1f2633;
        --chip:#0f1622; --cell:#2a3344; --cell-edge:#101521; --ok:#41d78f; --danger:#ff6a6a; --grey:#a9b3c2; --hover-border:#2a3344; }
@@ -41,7 +41,7 @@ body.embed .box{border:1px solid var(--line);border-radius:18px;box-shadow:0 10p
 .iconbtn:active{transform:translateY(1px)}
 .iconbtn svg{width:18px;height:18px}
 .months{position:relative;height:18px;margin:12px 2px 2px 42px;overflow:hidden}
-.monthsInner{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;color:var(--muted);font-size:12px;align-items:end;will-change:transform}
+.monthsInner{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;color:var(--muted);font-size:12px;align-items:end;will-change:transform;padding-right:18px}
 .monthsInner .m{grid-row:1}
 .row{display:flex;align-items:flex-start;overflow:auto}
 .rowlbls{color:var(--muted);font-size:12px;width:34px;margin-right:6px;display:grid;grid-template-rows:repeat(7,16px);gap:6px;flex:0 0 auto}
@@ -72,7 +72,7 @@ body.embed .box{border:1px solid var(--line);border-radius:18px;box-shadow:0 10p
 .dd.floating .item.delete{color:var(--danger)}
 .dd.floating svg{width:16px;height:16px}
 .tooltip{position:fixed;pointer-events:none;background:var(--card);border:1px solid var(--line);padding:6px 9px;border-radius:8px;font-size:12px;color:var(--ink);display:none;z-index:100;white-space:pre}
-body.embed.dark .wrap{background:#0a0b0f;border:1px solid #2c3039;border-radius:22px}
+body.embed.dark .wrap{background:#0a0b0f;border-radius:22px}
 body.embed.dark .rowlbls,body.embed.dark .monthsInner{color:#878c9b}
 body.embed.dark .heat{padding:8px 2px}
 body.embed.dark .cell{background:#161821;outline:1px solid #1f222c}
@@ -103,7 +103,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#1c1f2a}
     <div id='lpDate' style='margin:6px 0 10px 0;font-weight:700'></div>
     <div id='lpValWrap'><input id='lpVal' class='field' type='number' min='0' step='1' placeholder='minutes'/></div>
     <div style='display:flex;justify-content:space-between;align-items:center;margin-top:14px'>
-      <div id='lpStreak' class='tiny' style='display:flex;align-items:center;gap:6px'>🔥 <span>0 days streak</span></div>
+      <div id='lpStreak' class='tiny' style='display:flex;align-items:center;gap:6px'>🔥 <span>0 days </span></div>
       <div class='rowx'><button class='btn danger' id='undo' style='display:none'>Undo</button><button class='btn success' id='save'>Save</button></div>
     </div>
   </div>
@@ -422,7 +422,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#1c1f2a}
     };
     btn.addEventListener('pointerdown',e=>{
       e.preventDefault();
-      Pop.open(btn,container,buildMenu,'left');
+      Pop.open(btn,container,buildMenu,'right');
     });
   }
 })();
