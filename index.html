@@ -272,13 +272,20 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
         }
       }
 
-      const streakText=(data.stats.streak||0)+' days';
-      id(`s${h.id}`).textContent=streakText;
+      let streakStats=data.stats||{};
+      if(mode!=='last365'){
+        try{
+          const full=await API.heatmap(h.id,'last365');
+          if(full?.stats) streakStats=full.stats;
+        }catch(err){ console.error(err); }
+      }
+
+      id(`s${h.id}`).textContent=((streakStats.streak||0)+' days');
       const avgEl=id(`a${h.id}`);
       if(avgEl){
-        avgEl.textContent=fmt(data.stats.average||0)+(unitText?' '+unitText:'');
+        avgEl.textContent=fmt((data.stats||{}).average||0)+(unitText?' '+unitText:'');
       }
-      id(`t${h.id}`).textContent=fmt(data.stats.total||0)+(unitText?' '+unitText:'');
+      id(`t${h.id}`).textContent=fmt((data.stats||{}).total||0)+(unitText?' '+unitText:'');
 
       const todayKey=ymd(todayLocal());
       const tRow = days.find(x=>x.date===todayKey);
@@ -288,7 +295,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
       } else {
         btn.innerHTML='<strong>Log Today</strong> →';
       }
-      btn.onclick=()=>openLog(h,todayLocal(),tv,btn,data.stats.streak,data.stats.continuesToday);
+      btn.onclick=()=>openLog(h,todayLocal(),tv,btn,streakStats.streak,streakStats.continuesToday);
     }
 
     return host;
@@ -296,9 +303,13 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
 
   function calendarDD(current,onPick){
     const dd=document.createElement('div'); dd.className='dd floating';
-    ['Past 365 days', String(new Date().getFullYear())].forEach(label=>{
-      const it=document.createElement('div'); it.className='item'; it.textContent=label;
-      it.onclick=()=>{ Pop.close(); onPick(label==='Past 365 days'?'last365':Number(label)); };
+    const now=new Date().getFullYear();
+    const opts=[{label:'Past 365 days',value:'last365'}];
+    for(let i=0;i<3;i++) opts.push({label:String(now-i),value:now-i});
+    opts.forEach(opt=>{
+      const it=document.createElement('div'); it.className='item'; it.textContent=opt.label;
+      if(String(opt.value)===String(current)) it.style.fontWeight='700';
+      it.onclick=()=>{ Pop.close(); onPick(opt.value); };
       dd.appendChild(it);
     });
     return dd;
