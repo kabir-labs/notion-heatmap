@@ -201,7 +201,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
     const monthsInner=document.createElement('div'); monthsInner.className='monthsInner'; months.appendChild(monthsInner);
     card.appendChild(months);
 
-    let mode='last365';
+    let mode=localStorage.getItem(`mode-${h.id}`)||'last365';
     const heatWrap=div('row');
     const rowlbls=div('rowlbls'); rowlbls.innerHTML=`<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>`;
     heatWrap.appendChild(rowlbls);
@@ -224,7 +224,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
     statsWrap.appendChild(cta);
     card.appendChild(statsWrap);
 
-    cal.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(cal,card,()=>calendarDD(mode,(m)=>{ mode=m; refresh(); })) });
+    cal.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(cal,card,()=>calendarDD(mode,(m)=>{ mode=m; localStorage.setItem(`mode-${h.id}`,mode); refresh(); })) });
     dots.addEventListener('pointerdown',(e)=>{ e.preventDefault(); Pop.open(dots,card,()=>dotsDD(h)); });
 
     host.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',h.id));
