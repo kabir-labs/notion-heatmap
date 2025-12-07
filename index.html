@@ -17,7 +17,9 @@ body.embed.dark{
   --bg:#191919; --card:#191919; --ink:#f3f3f3; --muted:#b5b5b5; --line:#2b2b2b;
   --chip:#232323; --cell:#272727; --cell-edge:#141414; --grey:#d8d8d8; --hover-border:#3a3a3a;
 }
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.35 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+html{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:14px/1.35 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+body{margin:0;min-height:100%;background:var(--bg);color:inherit;font:inherit}
+body:not(.embed){background-image:radial-gradient(circle,#d8dce5 1px,transparent 2px);background-size:40px 40px;background-attachment:fixed}
 *,*:before,*:after{box-sizing:border-box}
  .wrap{max-width:1100px;margin:0 auto;padding:100px;overflow:hidden}
 body.embed .wrap{padding:18px}
@@ -29,7 +31,7 @@ body.embed .wrap{padding:18px}
 .btn.success{background:var(--ok);border-color:var(--ok);color:#0b0f14}
 .btn.danger{background:var(--danger);border-color:var(--danger);color:#0b0f14}
 .grid{display:flex;flex-direction:column;gap:18px}
-.box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:42px;overflow:hidden}
+.box{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px;overflow:hidden}
 body.embed .box{border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 26px rgba(0,0,0,.25)}
 .embed.dark .box{border:1px solid #2b2b2b;background:var(--card);box-shadow:none}
 .hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
@@ -40,12 +42,12 @@ body.embed .box{border:1px solid var(--line);border-radius:18px;box-shadow:0 10p
 .dark .iconbtn:hover{box-shadow:0 12px 28px rgba(0,0,0,.6)}
 .iconbtn:active{transform:translateY(1px)}
 .iconbtn svg{width:18px;height:18px}
-.months{position:relative;height:18px;margin:12px 2px 2px 42px;overflow:visible;padding-right:28px}
-.monthsInner{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;color:var(--muted);font-size:12px;align-items:end;will-change:transform;padding-right:18px}
+.months{position:relative;height:18px;margin:12px 0 2px 0;overflow:hidden;padding:0 24px 0 40px}
+.monthsInner{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;color:var(--muted);font-size:12px;align-items:end;will-change:transform}
 .monthsInner .m{grid-row:1}
-.row{display:flex;align-items:flex-start;overflow:auto}
+.row{display:flex;align-items:flex-start;overflow:auto;padding-right:24px}
 .rowlbls{color:var(--muted);font-size:12px;width:34px;margin-right:6px;display:grid;grid-template-rows:repeat(7,16px);gap:6px;flex:0 0 auto}
-.heat{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;grid-template-rows:repeat(7,16px);padding:4px 2px;flex:1 1 auto;min-height:140px;max-width:100%}
+.heat{display:grid;grid-auto-flow:column;grid-auto-columns:16px;gap:6px;grid-template-rows:repeat(7,16px);padding:4px 24px 4px 0;margin-right:16px;flex:1 1 auto;min-height:140px;max-width:100%}
 .cell{width:16px;height:16px;border-radius:3px;background:var(--cell);outline:1px solid var(--cell-edge);cursor:pointer;transition:opacity .1s,transform .1s,box-shadow .2s}
 .cell:hover{opacity:.95;transform:translateY(-1px);box-shadow:0 6px 12px rgba(0,0,0,.25)}
 .statsWrap{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-top:26px}
@@ -62,6 +64,7 @@ body.embed .box{border:1px solid var(--line);border-radius:18px;box-shadow:0 10p
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:360px;max-width:min(520px,92vw);color:var(--ink);overflow:hidden}
 .rowx{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .field{width:100%;background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;max-width:100%}
+select.field[disabled]{background:var(--chip);color:var(--muted);cursor:default;appearance:none;-webkit-appearance:none}
 .tiny{color:var(--muted);font-size:12px}
 .kbd{background:#232a38;color:#e8eef6;border:1px solid #3a4356;border-radius:6px;padding:2px 6px;font-size:12px}
 .dark .kbd{background:#1b2230}
@@ -69,12 +72,13 @@ body.embed .box{border:1px solid var(--line);border-radius:18px;box-shadow:0 10p
 .dd.floating .item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--ink);transition:background .1s}
 .dd.floating .item:last-child{border-bottom:none}
 .dd.floating .item:hover{background:rgba(255,255,255,.06)}
+body:not(.embed) .dd.floating .item:hover{background:var(--chip);color:var(--ink)}
 .dd.floating .item.delete{color:var(--danger)}
 .dd.floating svg{width:16px;height:16px}
 .tooltip{position:fixed;pointer-events:none;background:var(--card);border:1px solid var(--line);padding:6px 9px;border-radius:8px;font-size:12px;color:var(--ink);display:none;z-index:100;white-space:pre}
 body.embed.dark .wrap{background:#191919;border-radius:18px}
 body.embed.dark .rowlbls,body.embed.dark .monthsInner{color:#a5a5a5}
-body.embed.dark .heat{padding:8px 2px}
+body.embed.dark .heat{padding:8px 24px 8px 0;margin-right:16px}
 body.embed.dark .cell{background:#252525;outline:1px solid #2f2f2f}
 body.embed.dark .stats .k{color:#bcbcbc}
 body.embed.dark .statsWrap{border-top:1px solid rgba(255,255,255,.08);padding-top:18px;margin-top:32px}
@@ -110,14 +114,14 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
 </div>
 <div id='edit' class='modal'>
   <div class='panel'>
-    <div class='rowx' style='justify-content:space-between'><strong>Edit habit</strong><button class='btn kbd' id='esc2'>esc</button></div>
+    <div class='rowx' style='justify-content:space-between'><strong>Edit Habit</strong><button class='btn kbd' id='esc2'>esc</button></div>
     <div style='display:flex;flex-direction:column;gap:10px;margin-top:12px'>
       <input id='ehName' class='field' placeholder='Title'/>
-      <select id='ehType' class='field'><option value='number'>Number</option><option value='checkbox'>Checkbox</option></select>
+      <select id='ehType' class='field' disabled><option value='number'>Number</option><option value='checkbox'>Checkbox</option></select>
       <input id='ehUnit' class='field' placeholder='Unit (minutes, pages, ...)'/>
       <input id='ehColor' class='field' type='color' value='#35c27a'/>
       <div><div class='tiny' style='margin:8px 0 6px'>Calculate streak only on:</div><div class='days7' id='ehDays' style='display:grid;grid-template-columns:repeat(2,1fr);gap:8px 18px;'></div></div>
-      <button class='btn success' id='ehSave'>Save changes</button>
+      <button class='btn success' id='ehSave'>Save Changes</button>
     </div>
   </div>
 </div>
@@ -206,14 +210,17 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
 
     const unitText=(h.unit||'').trim();
     const stats=div('stats');
-    stats.innerHTML=`
-      <div><span class='k'>Streak:</span> <span class='v' id='s${h.id}'>0 days</span></div>
-      <div><span class='k'>Average:</span> <span class='v' id='a${h.id}'>0${unitText?' '+unitText:''}</span></div>
-      <div><span class='k'>Total:</span> <span class='v' id='t${h.id}'>0${unitText?' '+unitText:''}</span></div>`;
+    let statsHtml=`
+      <div><span class='k'>Streak:</span> <span class='v' id='s${h.id}'>0 days</span></div>`;
+    if(h.type!=='checkbox'){
+      statsHtml+=`<div><span class='k'>Average:</span> <span class='v' id='a${h.id}'>0${unitText?' '+unitText:''}</span></div>`;
+    }
+    statsHtml+=`<div><span class='k'>Total:</span> <span class='v' id='t${h.id}'>0${unitText?' '+unitText:''}</span></div>`;
+    stats.innerHTML=statsHtml;
     const statsWrap=div('statsWrap');
     statsWrap.appendChild(stats);
 
-    const cta=div('cta'); const btn=button('Log today →'); cta.appendChild(btn);
+    const cta=div('cta'); const btn=button('Log Today →'); cta.appendChild(btn);
     statsWrap.appendChild(cta);
     card.appendChild(statsWrap);
 
@@ -267,7 +274,10 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
 
       const streakText=(data.stats.streak||0)+' days';
       id(`s${h.id}`).textContent=streakText;
-      id(`a${h.id}`).textContent=fmt(data.stats.average||0)+(unitText?' '+unitText:'');
+      const avgEl=id(`a${h.id}`);
+      if(avgEl){
+        avgEl.textContent=fmt(data.stats.average||0)+(unitText?' '+unitText:'');
+      }
       id(`t${h.id}`).textContent=fmt(data.stats.total||0)+(unitText?' '+unitText:'');
 
       const todayKey=ymd(todayLocal());
@@ -276,7 +286,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
       if(tv>0){
         btn.innerHTML=`Today: <strong>${tv} ${h.unit||''}</strong> <span class='check'></span>`;
       } else {
-        btn.innerHTML='<strong>Log today</strong> →';
+        btn.innerHTML='<strong>Log Today</strong> →';
       }
       btn.onclick=()=>openLog(h,todayLocal(),tv,btn,data.stats.streak,data.stats.continuesToday);
     }
@@ -385,13 +395,20 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
     };
   }
 
-  function buildPalette(hex){ const [h,s,l]=hexToHsl(hex||'#35c27a'); return {1:hslToHex(h,Math.min(1,s),cl(l*0.58)),2:hslToHex(h,Math.min(1,s),cl(l*0.68)),3:hslToHex(h,Math.min(1,s),cl(l*0.80)),4:hslToHex(h,Math.min(1,s),cl(l*0.92))}; }
+  function buildPalette(hex){ const [h,s,l]=hexToHsl(hex||'#35c27a'); return {1:hslToHex(h,Math.min(1,s),cl(l*0.92)),2:hslToHex(h,Math.min(1,s),cl(l*0.80)),3:hslToHex(h,Math.min(1,s),cl(l*0.68)),4:hslToHex(h,Math.min(1,s),cl(l*0.58))}; }
   function level(days,v){ if(v<=0) return 0; const vals=days.map(d=>(d?Number(d.value)||0:0)).filter(x=>x>0).sort((a,b)=>a-b); if(vals.length<5) return 1; const q=p=>vals[Math.floor((vals.length-1)*p)]; const S=[0,q(.2),q(.4),q(.6),q(.8)]; if(v>S[4])return 4; if(v>S[3])return 3; if(v>S[2])return 2; return 1; }
   function alignToMonday(days){ const out=days.slice(); if(!out.length) return out; const first=new Date(out[0].date+'T00:00:00'); const dow=first.getDay(); const need=(dow===1)?0:((dow===0)?6:(dow-1)); return Array(need).fill(null).concat(out); }
   function chunkWeeks(days){ const weeks=[]; let buf=[]; for(let i=0;i<days.length;i++){ buf.push(days[i]); if(buf.length===7){ weeks.push(buf); buf=[]; } } if(buf.length){ while(buf.length<7) buf.push(null); weeks.push(buf); } return weeks; }
   function monthStarts(days){ const map=new Map(); const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; for(let i=0;i<days.length;i++){ const d=days[i]; if(!d) continue; const dt=new Date(d.date+'T00:00:00'); if(dt.getDate()===1){ const weekIdx=Math.floor(i/7); map.set(weekIdx,months[dt.getMonth()]); } } return map; }
 
-  function showTip(evt,date,value,unit){ const s=`${value||0} ${unit||''}`.trim(); const t=id('tip'); t.textContent=`${s||'0'}\n${new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'})}`; t.style.display='block'; t.style.left=evt.clientX+12+'px'; t.style.top=evt.clientY-12+'px'; }
+  function showTip(evt,date,value,unit){
+    const s=`${value||0} ${unit||''}`.trim();
+    const t=id('tip');
+    t.innerHTML=`<strong>${s||'0'}</strong><br>${new Date(date+'T00:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'})}`;
+    t.style.display='block';
+    t.style.left=evt.clientX+12+'px';
+    t.style.top=evt.clientY-12+'px';
+  }
   function todayLocal(){ const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); }
   function ymd(d){ const z=n=>n<10?'0'+n:n; return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; }
   function fmt(n){ return (Math.round(n*100)/100).toString(); }
@@ -407,7 +424,7 @@ body.embed.dark .btn:not(.success):not(.danger):hover{background:#2a2a2a}
     const container=document.body;
     const buildMenu=()=>{
       const dd=document.createElement('div'); dd.className='dd floating';
-      [{label:'# Number',type:'number'},{label:'Checkbox',type:'checkbox'}].forEach(opt=>{
+      [{label:'Number',type:'number'},{label:'Checkbox',type:'checkbox'}].forEach(opt=>{
         const it=document.createElement('div'); it.className='item'; it.textContent=opt.label;
         it.onclick=async()=>{
           Pop.close();
